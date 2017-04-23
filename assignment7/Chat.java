@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Chat {
 
-	private static final int maxAcceptableDelay=4000;
+	private static final int maxAcceptableDelay=5000;
 	
 	private HashMap<Integer,User> participants=new HashMap<Integer,User>();
 	private Object lockParticipants=new Object();
@@ -34,8 +34,8 @@ public class Chat {
 	public void Conversation(){
 		conversationId=ServerMain.getNewConversationId();
 		synchronized(ServerMain.lockConversations){
-			conversationId=MainServer.conversationId;
-			MainServer.conversationId++;
+			conversationId= ServerMain.conversationId;
+			ServerMain.conversationId++;
 		}
 		
 	}
@@ -103,7 +103,7 @@ public class Chat {
 		return returnStr;
 	}
 	
-	public void addMsgToConversation(int userId, String timestamp, String msg){
+	public void addMsgToChat(int userId, String timestamp, String msg){
 		String returnStr="";
 		Message a=new Message(userId,timestamp,msg);
 		synchronized(lockMessages){

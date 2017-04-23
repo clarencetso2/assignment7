@@ -2,14 +2,15 @@ package assignment7;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
 
 public class ServerMain {
-private static HashMap<Integer, User> loginInfo=new HashMap<Integer,User>();
+static HashMap<Integer, User> loginInfo=new HashMap<Integer,User>();
 private static int globalUserId=0;
 private static Object lockLoginInfo= new Object();//Locked whenever id or loginInfo is written to
 
-private static HashMap<Integer,Chat> conversations=new  HashMap<Integer,Chat>();
+static HashMap<Integer,Chat> conversations=new  HashMap<Integer,Chat>();
 static Object lockConversations= new Object();//Locked whenever id or conversations are written to
 private static int globalConversationId=0;
 private static Object lockConversationId=new Object();
@@ -18,15 +19,17 @@ static int conversationId=0;
 
 
 public static void main(String[] args){
-	int portNumber = Integer.parseInt(args[0]);
+	int portNumber = 1025;
 	
 		// listen for a new client
 	   try {
-	            ServerSocket serverSocket = new ServerSocket(portNumber);
+	            ServerSocket serverSock = new ServerSocket(portNumber);
 	            System.out.println("Running on port " + portNumber );
 	            while(true){
-	            	
-	            	new Thread(new Client(serverSocket.accept())).start();
+	            	Socket clientSocket = serverSock.accept();
+	            	Thread t = new Thread(new Client(clientSocket));
+	            	t.start();
+	            	System.out.println("got a connection");
 	            	try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
